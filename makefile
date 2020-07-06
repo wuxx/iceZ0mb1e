@@ -49,7 +49,7 @@ SERIALBAUD = 9600
 ###############################################################################
 # Default
 ###############################################################################
-TARGET = 5k
+TARGET = icesugar
 
 ifeq ($(TARGET),1k)
 	SRC += ./top/hx1k.v
@@ -65,6 +65,12 @@ else ifeq ($(TARGET),5k)
 	ICETIMEFLAGS = -d up5k -P sg48
 	FPGA_PINMAP = ./pinmap/upduino.pcf
 	ICEPROG_PARAM = -d i:0x0403:0x6014
+else ifeq ($(TARGET),icesugar)
+	SRC += ./top/icesugar.v
+	ARACHNEFLAGS = -d 5k -P sg48
+	ICETIMEFLAGS = -d up5k -P sg48
+	FPGA_PINMAP = ./pinmap/icesugar.pcf
+	ICEPROG_PARAM = 
 else ifeq ($(TARGET),8k)
 	SRC += ./top/hx8k.v
 	ARACHNEFLAGS = -d 8k -P ct256
@@ -95,7 +101,11 @@ YOSYS = yosys
 ARACHNEPNR = arachne-pnr
 ICEBOXEXPLAIN = icebox_explain
 ICEPACK = icepack
-ICEPROG = sudo iceprog
+ifeq ($(TARGET),icesugar)
+    ICEPROG = icesprog
+else
+    ICEPROG = sudo iceprog
+endif
 ICETIME = icetime
 QFLOW = qflow
 
